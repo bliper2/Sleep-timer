@@ -47,4 +47,4 @@ Any push to `main` auto-deploys.
 ## License
 
 See [LICENSE](./LICENSE) — All Rights Reserved.  
-© 2025 mrkraps (github.com/Potatoguy2)
+© 2026 mrkraps (github.com/bliper2)
