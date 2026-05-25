@@ -476,19 +476,33 @@ const doneMsg     = document.getElementById('doneMsg');
 const toast       = document.getElementById('toast');
 const shareBtn    = document.getElementById('shareBtn');
 
-/* Read ?total= &r= params on load */
+/* ── Read URL params on load ── */
+let endTimestamp = null; // ms epoch when timer hits 0 (used when running)
+
 (function() {
   const params = new URLSearchParams(window.location.search);
-  const total = parseInt(params.get('total'));
-  const rem   = parseInt(params.get('r'));
-  if (total > 0) {
+  const end    = parseInt(params.get('end'));   // epoch ms
+  const total  = parseInt(params.get('total'));
+  const paused = params.get('paused') === '1';
+  const rem    = parseInt(params.get('r'));
+
+  if (end > 0 && total > 0) {
     totalSeconds = total;
-    remaining    = (rem > 0 && rem <= total) ? rem : total;
-    /* highlight no preset since it's a shared custom state */
+    const msLeft = end - Date.now();
+    remaining    = Math.max(0, Math.round(msLeft / 1000));
+    /* highlight preset if matches */
     document.querySelectorAll('.dur-btn').forEach(b => {
-      if (parseInt(b.dataset.min) * 60 === total) b.classList.add('active');
-      else b.classList.remove('active');
+      b.classList.toggle('active', parseInt(b.dataset.min) * 60 === total);
     });
+    if (!paused && remaining > 0) {
+      /* auto-start so shared link is live */
+      endTimestamp = end;
+      running = true;
+      setTimeout(() => {
+        mainBtn.textContent = 'Pause';
+        ticker = setInterval(tick, 1000);
+      }, 50);
+    }
   }
 })();
 
@@ -546,41 +560,55 @@ function applyCustom() {
   el.addEventListener('keydown', e => { if (e.key === 'Enter') applyCustom(); });
 });
 
+function tick() {
+  if (remaining > 0) {
+    remaining--;
+    updateUI();
+  } else {
+    clearInterval(ticker);
+    running = false;
+    endTimestamp = null;
+    mainBtn.textContent = 'Restart';
+    doneMsg.classList.add('show');
+  }
+}
+
 function toggleTimer() {
   if (remaining === 0) { resetTimer(); return; }
   running = !running;
   mainBtn.textContent = running ? 'Pause' : 'Resume';
   if (running) {
-    ticker = setInterval(() => {
-      if (remaining > 0) {
-        remaining--;
-        updateUI();
-      } else {
-        clearInterval(ticker);
-        running = false;
-        mainBtn.textContent = 'Restart';
-        doneMsg.classList.add('show');
-      }
-    }, 1000);
+    endTimestamp = Date.now() + remaining * 1000;
+    ticker = setInterval(tick, 1000);
   } else {
     clearInterval(ticker);
+    endTimestamp = null;
   }
 }
 
 function resetTimer() {
   clearInterval(ticker);
-  running   = false;
-  remaining = totalSeconds;
+  running      = false;
+  endTimestamp = null;
+  remaining    = totalSeconds;
   mainBtn.textContent = 'Start';
   doneMsg.classList.remove('show');
   updateUI();
 }
 
-/* ── Share: encode total + current remaining so progress is preserved ── */
+/* ── Share: encode end timestamp so link is always live ── */
 let toastTimer = null;
 function shareTimer() {
   const base = window.location.href.split('?')[0];
-  const url  = `${base}?total=${totalSeconds}&r=${remaining}`;
+  let url;
+  if (running && endTimestamp) {
+    /* timer is running — encode when it ends so recipient gets live countdown */
+    url = `${base}?end=${endTimestamp}&total=${totalSeconds}`;
+  } else {
+    /* paused — encode frozen remaining + flag */
+    const end = Date.now() + remaining * 1000;
+    url = `${base}?end=${end}&total=${totalSeconds}&paused=1`;
+  }
   navigator.clipboard.writeText(url).then(() => {
     shareBtn.classList.add('copied');
     toast.classList.add('show');
