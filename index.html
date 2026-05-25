@@ -476,13 +476,19 @@ const doneMsg     = document.getElementById('doneMsg');
 const toast       = document.getElementById('toast');
 const shareBtn    = document.getElementById('shareBtn');
 
-/* Read ?t= param on load */
+/* Read ?total= &r= params on load */
 (function() {
   const params = new URLSearchParams(window.location.search);
-  const t = parseInt(params.get('t'));
-  if (t > 0) {
-    totalSeconds = t;
-    remaining    = t;
+  const total = parseInt(params.get('total'));
+  const rem   = parseInt(params.get('r'));
+  if (total > 0) {
+    totalSeconds = total;
+    remaining    = (rem > 0 && rem <= total) ? rem : total;
+    /* highlight no preset since it's a shared custom state */
+    document.querySelectorAll('.dur-btn').forEach(b => {
+      if (parseInt(b.dataset.min) * 60 === total) b.classList.add('active');
+      else b.classList.remove('active');
+    });
   }
 })();
 
@@ -570,11 +576,11 @@ function resetTimer() {
   updateUI();
 }
 
-/* ── Share: build URL with ?t=seconds and copy it ── */
+/* ── Share: encode total + current remaining so progress is preserved ── */
 let toastTimer = null;
 function shareTimer() {
   const base = window.location.href.split('?')[0];
-  const url  = `${base}?t=${totalSeconds}`;
+  const url  = `${base}?total=${totalSeconds}&r=${remaining}`;
   navigator.clipboard.writeText(url).then(() => {
     shareBtn.classList.add('copied');
     toast.classList.add('show');
