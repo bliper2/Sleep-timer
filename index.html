@@ -477,33 +477,14 @@ const toast       = document.getElementById('toast');
 const shareBtn    = document.getElementById('shareBtn');
 
 /* ── Read URL params on load ── */
-let endTimestamp = null; // ms epoch when timer hits 0 (used when running)
+let endTimestamp = null;
+let _sharedEnd = 0, _sharedTotal = 0, _sharedPaused = false;
 
 (function() {
-  const params = new URLSearchParams(window.location.search);
-  const end    = parseInt(params.get('end'));   // epoch ms
-  const total  = parseInt(params.get('total'));
-  const paused = params.get('paused') === '1';
-  const rem    = parseInt(params.get('r'));
-
-  if (end > 0 && total > 0) {
-    totalSeconds = total;
-    const msLeft = end - Date.now();
-    remaining    = Math.max(0, Math.round(msLeft / 1000));
-    /* highlight preset if matches */
-    document.querySelectorAll('.dur-btn').forEach(b => {
-      b.classList.toggle('active', parseInt(b.dataset.min) * 60 === total);
-    });
-    if (!paused && remaining > 0) {
-      /* auto-start so shared link is live */
-      endTimestamp = end;
-      running = true;
-      setTimeout(() => {
-        mainBtn.textContent = 'Pause';
-        ticker = setInterval(tick, 1000);
-      }, 50);
-    }
-  }
+  const params  = new URLSearchParams(window.location.search);
+  _sharedEnd    = parseInt(params.get('end'))   || 0;
+  _sharedTotal  = parseInt(params.get('total')) || 0;
+  _sharedPaused = params.get('paused') === '1';
 })();
 
 function fmt(s) {
@@ -621,6 +602,25 @@ function shareTimer() {
     prompt('Copy this link:', url);
   });
 }
+
+/* ── Apply shared URL state after DOM ready ── */
+window.addEventListener('load', function() {
+  if (_sharedEnd > 0 && _sharedTotal > 0) {
+    totalSeconds = _sharedTotal;
+    const msLeft = _sharedEnd - Date.now();
+    remaining    = Math.max(0, Math.round(msLeft / 1000));
+    document.querySelectorAll('.dur-btn').forEach(b => {
+      b.classList.toggle('active', parseInt(b.dataset.min) * 60 === _sharedTotal);
+    });
+    updateUI();
+    if (!_sharedPaused && remaining > 0) {
+      endTimestamp = _sharedEnd;
+      running = true;
+      mainBtn.textContent = 'Pause';
+      ticker = setInterval(tick, 1000);
+    }
+  }
+});
 
 /* ── RAF loop ── */
 function loop(t) { drawBg(t); requestAnimationFrame(loop); }
