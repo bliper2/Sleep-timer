@@ -16,24 +16,21 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --bg: #07090d;
-      --surface: rgba(14,18,26,0.92);
-      --surface2: #1a1e28;
+      --surface: rgba(15, 18, 28, 0.95);
       --border: rgba(255,255,255,0.08);
       --accent: #5b8dee;
-      --text-primary: #e8eaf0;
-      --text-muted: #6b7280;
-      --danger: #e05c5c;
-      --success: #4ade80;
+      --text: #e8eaf0;
+      --muted: #6b7280;
     }
     html, body {
       height: 100%;
       font-family: 'Syne', sans-serif;
-      color: var(--text-primary);
+      background: var(--bg);
       display: flex;
       align-items: center;
       justify-content: center;
-      background: var(--bg);
       overflow: hidden;
+      color: var(--text);
     }
     canvas#bg { position: fixed; inset: 0; z-index: 0; }
     .stars { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
@@ -41,98 +38,92 @@
     .card {
       position: relative;
       background: var(--surface);
-      border: 1px solid rgba(255,255,255,0.08);
+      border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 24px 28px 36px;
+      padding: 20px 24px 32px;
       width: min(420px, 95vw);
       text-align: center;
       z-index: 2;
-      backdrop-filter: blur(24px);
-      box-shadow: 0 30px 70px rgba(0,0,0,0.7);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 25px 60px rgba(0,0,0,0.6);
     }
 
-    /* Top Bar - Username + Font */
+    /* Top Bar */
     .top-bar {
       display: flex;
-      gap: 12px;
-      margin-bottom: 20px;
+      gap: 10px;
+      margin-bottom: 18px;
     }
     .username-input {
       flex: 1;
-      background: rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.06);
       border: 1px solid var(--border);
       border-radius: 9999px;
-      padding: 9px 16px;
+      padding: 8px 16px;
       color: white;
-      font-size: 15px;
+      font-size: 14.5px;
       text-align: center;
     }
     .font-select {
-      background: rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.06);
       border: 1px solid var(--border);
       border-radius: 9999px;
-      padding: 9px 14px;
+      padding: 8px 14px;
       color: white;
       font-size: 14px;
-      min-width: 135px;
     }
 
     .moon-icon {
-      font-size: 42px;
-      margin: 8px 0 12px;
-      filter: drop-shadow(0 0 16px rgba(250, 204, 100, 0.6));
-      animation: float 4s ease-in-out infinite;
+      font-size: 32px;
+      margin: 4px 0 12px;
+      display: block;
     }
-    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 
     h1 {
       font-size: 13px;
       font-weight: 600;
-      letter-spacing: 2.5px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 28px;
+      color: var(--muted);
+      margin-bottom: 20px;
     }
 
     .time-display {
-      font-family: 'DM Mono', monospace;
-      font-size: clamp(58px, 12vw, 82px);
-      font-weight: 300;
-      letter-spacing: 0.05em;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 68px;
+      font-weight: 500;
+      letter-spacing: 2px;
       margin-bottom: 6px;
     }
     .time-label {
-      font-size: 11.5px;
+      font-size: 11px;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 26px;
+      color: var(--muted);
+      margin-bottom: 24px;
     }
 
-    /* Progress */
     .progress-track {
-      height: 4px;
+      height: 5px;
       background: rgba(255,255,255,0.08);
       border-radius: 999px;
       margin-bottom: 8px;
-      overflow: hidden;
     }
     .progress-fill {
       height: 100%;
-      background: linear-gradient(90deg, #5b8dee, #94b8ff);
-      width: 100%;
+      background: linear-gradient(90deg, #5b8dee, #a3c0ff);
       border-radius: 999px;
+      width: 100%;
       position: relative;
-      transition: width 1s linear;
     }
     .progress-fill::after {
       content: '';
       position: absolute;
-      right: -5px;
+      right: -6px;
       top: 50%;
       transform: translateY(-50%);
-      width: 12px;
-      height: 12px;
+      width: 13px;
+      height: 13px;
       background: #5b8dee;
       border-radius: 50%;
       box-shadow: 0 0 12px #5b8dee;
@@ -142,28 +133,49 @@
       display: flex;
       justify-content: space-between;
       font-size: 11px;
-      color: var(--text-muted);
-      margin-bottom: 32px;
+      color: var(--muted);
+      margin-bottom: 28px;
     }
 
-    /* Buttons */
-    .controls { display: flex; gap: 10px; justify-content: center; margin-bottom: 24px; }
+    .controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 26px;
+    }
     button {
+      padding: 9px 20px;
+      border-radius: 10px;
       font-size: 12px;
       font-weight: 600;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
       text-transform: uppercase;
-      padding: 10px 20px;
-      border-radius: 10px;
       cursor: pointer;
       transition: all 0.2s;
     }
-    .btn-primary { background: rgba(91,141,238,0.15); color: #5b8dee; border: 1px solid rgba(91,141,238,0.3); }
+    .btn-primary { background: rgba(91,141,238,0.15); color: #5b8dee; border: 1px solid rgba(91,141,238,0.4); }
     .btn-ghost { background: transparent; color: #888; border: 1px solid rgba(255,255,255,0.1); }
-    .btn-share { background: transparent; color: #888; border: 1px solid rgba(255,255,255,0.1); }
 
-    .duration-picker, .custom-row { margin-top: 16px; }
-    .dur-btn.active { background: rgba(91,141,238,0.2); color: #5b8dee; border-color: #5b8dee; }
+    .duration-picker {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .dur-btn {
+      padding: 6px 14px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      font-size: 12px;
+      color: #aaa;
+    }
+    .dur-btn.active {
+      background: rgba(91,141,238,0.2);
+      color: #5b8dee;
+      border-color: #5b8dee;
+    }
 </style>
 </head>
 <body>
@@ -171,13 +183,12 @@
 <div class="stars" id="stars"></div>
 
 <div class="card">
-    <!-- Top Username + Font Selector -->
     <div class="top-bar">
-        <input type="text" id="username" class="username-input" value="mkrkaps" placeholder="username">
+        <input type="text" id="username" class="username-input" value="mkrkaps">
         <select id="fontSelect" class="font-select">
-            <option value="DM Mono">DM Mono (Default)</option>
-            <option value="Inter">Inter</option>
+            <option value="DM Mono">DM Mono</option>
             <option value="Space Grotesk" selected>Space Grotesk</option>
+            <option value="Inter">Inter</option>
             <option value="Syne">Syne</option>
         </select>
     </div>
@@ -185,8 +196,8 @@
     <span class="moon-icon">🌙</span>
     <h1 id="timerTitle">MKRKAPS'S SLEEP TIMER</h1>
     
-    <div class="time-display" id="timeDisplay">07:59:34</div>
-    <div class="time-label" id="timeLabel">REMAINING</div>
+    <div class="time-display" id="timeDisplay">07:58:56</div>
+    <div class="time-label">REMAINING</div>
 
     <div class="progress-track">
         <div class="progress-fill" id="progressBar"></div>
@@ -197,9 +208,9 @@
     </div>
 
     <div class="controls">
-        <button class="btn-primary" id="mainBtn" onclick="toggleTimer()">PAUSE</button>
+        <button class="btn-primary" id="mainBtn">PAUSE</button>
         <button class="btn-ghost" onclick="resetTimer()">RESET</button>
-        <button class="btn-share" onclick="shareTimer()">SHARE</button>
+        <button class="btn-ghost" onclick="shareTimer()">SHARE</button>
     </div>
 
     <div class="duration-picker">
@@ -211,61 +222,47 @@
         <button class="dur-btn active" data-min="480" onclick="setDuration(480,this)">8h</button>
     </div>
 
-    <div class="custom-row">
-        <label style="color:#888; font-size:13px;">Custom</label>
-        <div style="display:flex; gap:4px; background:rgba(255,255,255,0.05); padding:6px; border-radius:10px;">
-            <input type="number" id="inH" value="0" style="width:40px; text-align:center; background:transparent; border:none; color:white;">
-            <span style="color:#666">:</span>
-            <input type="number" id="inM" value="0" style="width:40px; text-align:center; background:transparent; border:none; color:white;">
-            <span style="color:#666">:</span>
-            <input type="number" id="inS" value="0" style="width:40px; text-align:center; background:transparent; border:none; color:white;">
+    <div style="margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <span style="color:#666; font-size:13px;">Custom</span>
+        <div style="display:flex; background:rgba(255,255,255,0.06); border-radius:8px; padding:4px 8px;">
+            <input type="number" id="inH" value="0" style="width:36px; text-align:center; background:transparent; border:none; color:white;">
+            <span style="color:#555;">:</span>
+            <input type="number" id="inM" value="0" style="width:36px; text-align:center; background:transparent; border:none; color:white;">
+            <span style="color:#555;">:</span>
+            <input type="number" id="inS" value="0" style="width:36px; text-align:center; background:transparent; border:none; color:white;">
         </div>
-        <button onclick="applyCustom()" style="margin-left:8px; padding:8px 16px;">SET</button>
+        <button onclick="applyCustom()" style="padding:6px 16px; font-size:12px;">SET</button>
     </div>
 </div>
 
 <script>
-/* === Background & Timer Code (same as before) === */
+/* Background */
 const canvas = document.getElementById('bg');
 const ctx = canvas.getContext('2d');
-let W, H, blobs;
-function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-function makeBlobs() {
-  blobs = [{x:W*0.2,y:H*0.15,r:W*0.38,color:[40,70,180],speed:0.00018,angle:0,amp:W*0.07},
-           {x:W*0.78,y:H*0.82,r:W*0.3,color:[80,30,130],speed:0.00024,angle:2.1,amp:W*0.09}];
+let W, H;
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
 }
 function drawBg(t) {
   ctx.fillStyle = '#07090d';
-  ctx.fillRect(0,0,W,H);
-  for (let b of blobs) {
-    const ox = Math.sin(t * b.speed * 1.3 + b.angle) * b.amp;
-    const oy = Math.cos(t * b.speed + b.angle) * b.amp * 0.7;
-    const grad = ctx.createRadialGradient(b.x+ox, b.y+oy, 0, b.x+ox, b.y+oy, b.r);
-    grad.addColorStop(0, `rgba(${b.color[0]},${b.color[1]},${b.color[2]},0.18)`);
-    grad.addColorStop(1, `rgba(${b.color[0]},${b.color[1]},${b.color[2]},0)`);
-    ctx.fillStyle = grad;
-    ctx.beginPath();
-    ctx.ellipse(b.x+ox, b.y+oy, b.r, b.r*0.65, 0, 0, Math.PI*2);
-    ctx.fill();
-  }
+  ctx.fillRect(0, 0, W, H);
 }
-window.addEventListener('resize', ()=>{resize(); makeBlobs();});
-resize(); makeBlobs();
+window.addEventListener('resize', resize);
+resize();
 requestAnimationFrame(function loop(t){ drawBg(t); requestAnimationFrame(loop); });
 
-/* Timer Variables */
-let totalSeconds = 479*60;
-let remaining = totalSeconds;
-let running = true;
-let ticker = setInterval(tick, 1000);
-
+/* Timer */
+let remaining = 7*3600 + 58*60 + 56;
 const timeDisplay = document.getElementById('timeDisplay');
 const timerTitle = document.getElementById('timerTitle');
 const usernameInput = document.getElementById('username');
 const fontSelect = document.getElementById('fontSelect');
 
 function fmt(s) {
-  let h = Math.floor(s/3600), m = Math.floor((s%3600)/60), sec = s%60;
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = s % 60;
   return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
 }
 
@@ -273,31 +270,22 @@ function updateUI() {
   timeDisplay.textContent = fmt(remaining);
 }
 
-function updateTitle() {
+usernameInput.addEventListener('input', () => {
   const name = usernameInput.value.trim().toUpperCase();
   timerTitle.textContent = name ? `${name}'S SLEEP TIMER` : "SLEEP TIMER";
-}
-
-usernameInput.addEventListener('input', updateTitle);
+});
 
 fontSelect.addEventListener('change', () => {
-  const f = fontSelect.value;
-  timeDisplay.style.fontFamily = f === "DM Mono" ? "'DM Mono', monospace" : `'${f}', sans-serif`;
+  const font = fontSelect.value;
+  timeDisplay.style.fontFamily = font === "DM Mono" ? "'DM Mono', monospace" : `'${font}', sans-serif`;
 });
 
 function tick() {
   if (remaining > 0) remaining--;
   updateUI();
 }
+setInterval(tick, 1000);
 
-/* Stub functions */
-function toggleTimer(){}
-function resetTimer(){}
-function setDuration(){}
-function applyCustom(){}
-function shareTimer(){}
-
-updateTitle();
 updateUI();
 </script>
 </body>
